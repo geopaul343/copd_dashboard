@@ -929,4 +929,142 @@ class ApiService {
       };
     }
   }
+
+  // Get daily data for a patient
+  Future<Map<String, dynamic>> getDailyData(
+    String idToken,
+    String patientId,
+  ) async {
+    try {
+      final String apiUrl = '$baseUrl/api/patients/$patientId/daily';
+
+      print('🔍 Daily API URL: $apiUrl');
+      print('🔍 Patient ID: $patientId');
+
+      final response = await _dio.get(
+        apiUrl,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $idToken',
+            'Content-Type': 'application/json',
+          },
+          validateStatus: (status) {
+            return status != null;
+          },
+        ),
+      );
+
+      print('Daily API response status: ${response.statusCode}');
+      print('Daily API response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': response.data};
+      } else {
+        return {
+          'success': false,
+          'error': 'Failed to load daily data: ${response.statusCode}',
+          'data': response.data,
+        };
+      }
+    } on DioException catch (e) {
+      print('Daily API Dio error: ${e.message}');
+      return {'success': false, 'error': 'Daily data failed: ${e.message}'};
+    } catch (e) {
+      print('❌ Daily data failed: $e');
+      return {'success': false, 'error': 'Daily data failed: ${e.toString()}'};
+    }
+  }
+
+  // Get weekly data for a patient
+  Future<Map<String, dynamic>> getWeeklyData(
+    String idToken,
+    String patientId,
+  ) async {
+    try {
+      final String apiUrl = '$baseUrl/api/patients/$patientId/weekly';
+
+      print('🔍 Weekly API URL: $apiUrl');
+      print('🔍 Patient ID: $patientId');
+
+      final response = await _dio.get(
+        apiUrl,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $idToken',
+            'Content-Type': 'application/json',
+          },
+          validateStatus: (status) {
+            return status != null;
+          },
+        ),
+      );
+
+      print('Weekly API response status: ${response.statusCode}');
+      print('Weekly API response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': response.data};
+      } else {
+        return {
+          'success': false,
+          'error': 'Failed to load weekly data: ${response.statusCode}',
+          'data': response.data,
+        };
+      }
+    } on DioException catch (e) {
+      print('Weekly API Dio error: ${e.message}');
+      return {'success': false, 'error': 'Weekly data failed: ${e.message}'};
+    } catch (e) {
+      print('❌ Weekly data failed: $e');
+      return {'success': false, 'error': 'Weekly data failed: ${e.toString()}'};
+    }
+  }
+
+  // Get monthly data for a patient
+  Future<Map<String, dynamic>> getMonthlyData(
+    String idToken,
+    String patientId,
+  ) async {
+    try {
+      final String apiUrl = '$baseUrl/api/patients/$patientId/monthly';
+
+      print('🔍 Monthly API URL: $apiUrl');
+      print('🔍 Patient ID: $patientId');
+
+      final response = await _dio.get(
+        apiUrl,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $idToken',
+            'Content-Type': 'application/json',
+          },
+          validateStatus: (status) {
+            return status != null;
+          },
+        ),
+      );
+
+      print('Monthly API response status: ${response.statusCode}');
+      print('Monthly API response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': response.data};
+      } else {
+        return {
+          'success': false,
+          'error': 'Failed to load monthly data: ${response.statusCode}',
+          'data': response.data,
+        };
+      }
+    } on DioException catch (e) {
+      print('Monthly API Dio error: ${e.message}');
+      return {'success': false, 'error': 'Monthly data failed: ${e.message}'};
+    } catch (e) {
+      print('❌ Monthly data failed: $e');
+      return {
+        'success': false,
+        'error': 'Monthly data failed: ${e.toString()}',
+      };
+    }
+  }
 }

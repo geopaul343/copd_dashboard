@@ -606,7 +606,7 @@ class Patient {
 
   // ---------- tiny helpers ----------
   static DateTime? _parseDate(dynamic value) =>
-      value == null ? null : DateTime.tryParse(value.toString());
+      value == null ? null : DateTime.tryParse(value.toSftring());
   static int? _parseInt(dynamic value) =>
       value == null ? null : int.tryParse(value.toString());
   static double? _parseDouble(dynamic value) =>

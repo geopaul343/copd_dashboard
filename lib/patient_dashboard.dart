@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'models/search_response.dart';
 import 'auth_screen_mobile.dart';
+import 'widgets/daily_check_screen.dart';
+import 'widgets/weekly_check_screen.dart';
+import 'widgets/monthly_check_screen.dart';
 import 'dart:convert';
 
 class PatientDashboard extends StatefulWidget {
@@ -15,9 +18,63 @@ class PatientDashboard extends StatefulWidget {
 
 class _PatientDashboardState extends State<PatientDashboard> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _screens.addAll([
+      _buildUserDashboard(),
+      DailyCheckScreen(
+        patientId: widget.patient.id,
+        patientName: widget.patient.name,
+      ),
+      WeeklyCheckScreen(
+        patientId: widget.patient.id,
+        patientName: widget.patient.name,
+      ),
+      MonthlyCheckScreen(
+        patientId: widget.patient.id,
+        patientName: widget.patient.name,
+      ),
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        selectedItemColor: Colors.blue.shade700,
+        unselectedItemColor: Colors.grey.shade600,
+        backgroundColor: Colors.white,
+        elevation: 8,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'User'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Daily',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.view_week), label: 'Weekly'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Monthly',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserDashboard() {
     // Debug logging to see what data we have
     print('🔍 Patient Dashboard - Raw patient data:');
     print('🔍 Name: ${widget.patient.name}');
