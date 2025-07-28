@@ -1,0 +1,250 @@
+{
+  "project_info": {
+    "project_number": "887192895309",
+    "project_id": "app-audio-analyzer",
+    "storage_bucket": "app-audio-analyzer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887192895309:android:16fd245eabaccacf2c4104",
+        "android_client_info": {
+          "package_name": "com.example.audiochoosefil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_26jbsh-P0Pg80dpagDuSuCTFCk4aj5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "887192895309-atq6pvj99rbu96ldj4p9r6kub23fa4qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.copdClinicalDashbord"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887192895309:android:945f3ccc0abc95d22c4104",
+        "android_client_info": {
+          "package_name": "com.example.copd_clinical_dashbord"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887192895309-72si7e4fcla7b4sep5unecqg17lu5om9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.copd_clinical_dashbord",
+            "certificate_hash": "4f8c8b70ca13ff6d4c4a3572fa33cab890923d66"
+          }
+        },
+        {
+          "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_26jbsh-P0Pg80dpagDuSuCTFCk4aj5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "887192895309-atq6pvj99rbu96ldj4p9r6kub23fa4qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.copdClinicalDashbord"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887192895309:android:b6fde55ef5581fdb2c4104",
+        "android_client_info": {
+          "package_name": "com.example.health_care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_26jbsh-P0Pg80dpagDuSuCTFCk4aj5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "887192895309-atq6pvj99rbu96ldj4p9r6kub23fa4qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.copdClinicalDashbord"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887192895309:android:7668179a08d9cbe62c4104",
+        "android_client_info": {
+          "package_name": "com.laennecai.careself"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_26jbsh-P0Pg80dpagDuSuCTFCk4aj5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "887192895309-atq6pvj99rbu96ldj4p9r6kub23fa4qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.copdClinicalDashbord"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887192895309:android:e270127e48122dfe2c4104",
+        "android_client_info": {
+          "package_name": "com.laennecai.digitalsteth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_26jbsh-P0Pg80dpagDuSuCTFCk4aj5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "887192895309-atq6pvj99rbu96ldj4p9r6kub23fa4qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.copdClinicalDashbord"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887192895309:android:432a1ea045334ef42c4104",
+        "android_client_info": {
+          "package_name": "com.laennecai.patient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887192895309-5vo87cu4shtghfabrgcptkf1c8arm8ib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.laennecai.patient",
+            "certificate_hash": "34ffa03551a1e1e1da290cfd9f278d6d3eed4b07"
+          }
+        },
+        {
+          "client_id": "887192895309-kjc1v87kmf3bquv2vb8np8dj43e77aeb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.laennecai.patient",
+            "certificate_hash": "f366b45035c08329610ed237ebf4993d84cf9750"
+          }
+        },
+        {
+          "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_26jbsh-P0Pg80dpagDuSuCTFCk4aj5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887192895309-hqmvsgdcf38d0mtv0p3rdm1d3afdlrs6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "887192895309-atq6pvj99rbu96ldj4p9r6kub23fa4qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.copdClinicalDashbord"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
