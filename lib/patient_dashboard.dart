@@ -18,6 +18,32 @@ class _PatientDashboardState extends State<PatientDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    // Debug logging to see what data we have
+    print('🔍 Patient Dashboard - Raw patient data:');
+    print('🔍 Name: ${widget.patient.name}');
+    print('🔍 ID: ${widget.patient.id}');
+    print('🔍 Date of Birth: ${widget.patient.dateOfBirth}');
+    print('🔍 Gender: ${widget.patient.gender}');
+    print('🔍 Email: ${widget.patient.email}');
+    print('🔍 Phone: ${widget.patient.phone}');
+    print('🔍 Address: ${widget.patient.address}');
+    print('🔍 COPD Diagnosed: ${widget.patient.copdDiagnosed}');
+    print('🔍 COPD Action Plan: ${widget.patient.copdActionPlan}');
+    print(
+      '🔍 Hospital Admissions: ${widget.patient.hospitalAdmissionsLast12m}',
+    );
+    print('🔍 Any Recommends: ${widget.patient.anyRecommends}');
+    print('🔍 Emergency Contact: ${widget.patient.emergencyContactName}');
+    print('🔍 Flu Vaccinated: ${widget.patient.fluVaccinated}');
+    print('🔍 Home Oxygen: ${widget.patient.homeOxygenEnabled}');
+    print('🔍 Inhaler Type: ${widget.patient.inhalerType}');
+    print('🔍 Smoking Status: ${widget.patient.smokingStatus}');
+    print('🔍 Other Condition: ${widget.patient.otherCondition}');
+    print('🔍 Stethoscope: ${widget.patient.isDoHaveDigitalStethoscope}');
+    print('🔍 Pulse Oximeter: ${widget.patient.doYouHavePulseOximeter}');
+    print('🔍 Rescue Pack: ${widget.patient.rescuepackAtHome}');
+    print('🔍 Flare Ups: ${widget.patient.isFlareUpsNonHospital}');
+
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
@@ -260,7 +286,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
   }
 
   Widget _buildPatientDemographicsSection() {
-    return _buildSection('Patient Demographics', Icons.person_outline, [
+    return _buildSection('Patient Demographics', Icons.person, [
       if (widget.patient.dateOfBirth != null)
         _buildInfoRow('Date of Birth', widget.patient.dateOfBirth!),
       if (widget.patient.gender != null)
@@ -275,52 +301,141 @@ class _PatientDashboardState extends State<PatientDashboard> {
   }
 
   Widget _buildCOPDAssessmentSection() {
-    return _buildSection('COPD Assessment', Icons.medical_services, [
-      _buildInfoRow('COPD Diagnosed', _getCOPDDiagnosis()),
-      _buildInfoRow('COPD Stage', _getCOPDStage()),
-      if (widget.patient.copdActionPlan != null)
-        _buildInfoRow('Action Plan', _getActionPlanStatus()),
-    ]);
+    List<Widget> assessmentItems = [];
+
+    final copdDiagnosis = _getCOPDDiagnosis();
+    if (copdDiagnosis != 'Not specified') {
+      assessmentItems.add(_buildInfoRow('COPD Diagnosed', copdDiagnosis));
+    }
+
+    final copdStage = _getCOPDStage();
+    if (copdStage != 'Not specified') {
+      assessmentItems.add(_buildInfoRow('COPD Stage', copdStage));
+    }
+
+    final actionPlan = _getActionPlanStatus();
+    if (actionPlan != 'Not specified') {
+      assessmentItems.add(_buildInfoRow('Action Plan', actionPlan));
+    }
+
+    if (assessmentItems.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return _buildSection(
+      'COPD Assessment',
+      Icons.medical_services,
+      assessmentItems,
+    );
   }
 
   Widget _buildMedicalEquipmentSection() {
+    List<Widget> equipmentItems = [];
+
+    final pulseOximeter = _getPulseOximeterStatus();
+    if (pulseOximeter != 'Not specified') {
+      equipmentItems.add(_buildInfoRow('Pulse Oximeter', pulseOximeter));
+    }
+
+    final homeOxygen = _getHomeOxygenStatus();
+    if (homeOxygen != 'Not specified') {
+      equipmentItems.add(_buildInfoRow('Home Oxygen', homeOxygen));
+    }
+
+    if (widget.patient.isDoHaveDigitalStethoscope != null) {
+      equipmentItems.add(
+        _buildInfoRow(
+          'Digital Stethoscope',
+          widget.patient.isDoHaveDigitalStethoscope!,
+        ),
+      );
+    }
+
+    if (equipmentItems.isEmpty) {
+      return SizedBox.shrink();
+    }
+
     return _buildSection(
       'Medical Equipment & Monitoring',
       Icons.monitor_heart,
-      [
-        _buildInfoRow('Pulse Oximeter', _getPulseOximeterStatus()),
-        _buildInfoRow('Home Oxygen', _getHomeOxygenStatus()),
-        _buildInfoRow('Digital Stethoscope', _getStethoscopeStatus()),
-      ],
+      equipmentItems,
     );
   }
 
   Widget _buildMedicationsSection() {
-    return _buildSection('Medications & Treatment', Icons.medication, [
-      _buildInfoRow('Inhaler Type', _getInhalerInfo()),
-      _buildInfoRow('Rescue Pack', _getRescuePackStatus()),
-      if (widget.patient.anyRecommends != null)
+    List<Widget> medicationItems = [];
+
+    final inhaler = _getInhalerInfo();
+    if (inhaler != 'Not specified') {
+      medicationItems.add(_buildInfoRow('Inhaler Type', inhaler));
+    }
+
+    final rescuePack = _getRescuePackStatus();
+    if (rescuePack != 'Not specified') {
+      medicationItems.add(_buildInfoRow('Rescue Pack', rescuePack));
+    }
+
+    if (widget.patient.anyRecommends != null) {
+      medicationItems.add(
         _buildInfoRow('Recommendations', widget.patient.anyRecommends!),
-    ]);
+      );
+    }
+
+    if (medicationItems.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return _buildSection(
+      'Medications & Treatment',
+      Icons.medication,
+      medicationItems,
+    );
   }
 
   Widget _buildEmergencySection() {
+    final emergencyContact = _getEmergencyContact();
+    if (emergencyContact == 'Not specified') {
+      return SizedBox.shrink();
+    }
+
     return _buildSection('Emergency Information', Icons.emergency, [
-      _buildInfoRow('Emergency Contact', _getEmergencyContact()),
+      _buildInfoRow('Emergency Contact', emergencyContact),
     ]);
   }
 
   Widget _buildVaccinationSection() {
+    final vaccination = _getVaccinationStatus();
+    if (vaccination == 'Not specified') {
+      return SizedBox.shrink();
+    }
+
     return _buildSection('Vaccination & Prevention', Icons.vaccines, [
-      _buildInfoRow('Flu Vaccination', _getVaccinationStatus()),
+      _buildInfoRow('Flu Vaccination', vaccination),
     ]);
   }
 
   Widget _buildLifestyleSection() {
-    return _buildSection('Lifestyle & Risk Factors', Icons.smoking_rooms, [
-      _buildInfoRow('Smoking Status', _getSmokingStatus()),
-      _buildInfoRow('Other Conditions', _getOtherConditions()),
-    ]);
+    List<Widget> lifestyleItems = [];
+
+    final smokingStatus = _getSmokingStatus();
+    if (smokingStatus != 'Not specified') {
+      lifestyleItems.add(_buildInfoRow('Smoking Status', smokingStatus));
+    }
+
+    final otherConditions = _getOtherConditions();
+    if (otherConditions != 'Not specified') {
+      lifestyleItems.add(_buildInfoRow('Other Conditions', otherConditions));
+    }
+
+    if (lifestyleItems.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return _buildSection(
+      'Lifestyle & Risk Factors',
+      Icons.smoking_rooms,
+      lifestyleItems,
+    );
   }
 
   Widget _buildSection(String title, IconData icon, List<Widget> children) {
@@ -398,12 +513,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getCOPDDiagnosis() {
     try {
       if (widget.patient.copdDiagnosed != null) {
-        // Remove extra quotes if present
+        print('🔍 COPD Diagnosed raw data: ${widget.patient.copdDiagnosed}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.copdDiagnosed!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 COPD Diagnosed parsed: $data');
         return data['hasCOPD'] == true ? 'Yes' : 'No';
       }
     } catch (e) {
@@ -415,12 +535,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getCOPDStage() {
     try {
       if (widget.patient.copdDiagnosed != null) {
-        // Remove extra quotes if present
+        print('🔍 COPD Stage raw data: ${widget.patient.copdDiagnosed}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.copdDiagnosed!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 COPD Stage parsed: $data');
         return data['copdStage'] ?? 'Not specified';
       }
     } catch (e) {
@@ -432,12 +557,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getActionPlanStatus() {
     try {
       if (widget.patient.copdActionPlan != null) {
-        // Remove extra quotes if present
+        print('🔍 Action Plan raw data: ${widget.patient.copdActionPlan}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.copdActionPlan!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Action Plan parsed: $data');
         return data['hasCOPDActionPlan'] == true
             ? 'Available'
             : 'Not available';
@@ -451,12 +581,19 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getPulseOximeterStatus() {
     try {
       if (widget.patient.doYouHavePulseOximeter != null) {
-        // Remove extra quotes if present
+        print(
+          '🔍 Pulse Oximeter raw data: ${widget.patient.doYouHavePulseOximeter}',
+        );
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.doYouHavePulseOximeter!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Pulse Oximeter parsed: $data');
         final hasOximeter = data['ownsPulseOximeter'] == true;
         final lastLevel = data['lastOxygenLevel'];
         return hasOximeter ? 'Yes (Last reading: ${lastLevel}%)' : 'No';
@@ -470,12 +607,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getHomeOxygenStatus() {
     try {
       if (widget.patient.homeOxygenEnabled != null) {
-        // Remove extra quotes if present
+        print('🔍 Home Oxygen raw data: ${widget.patient.homeOxygenEnabled}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.homeOxygenEnabled!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Home Oxygen parsed: $data');
         final hasOxygen = data['hasHomeOxygen'] == true;
         if (hasOxygen) {
           final liters = data['oxygenLitresPerMinute'];
@@ -491,18 +633,26 @@ class _PatientDashboardState extends State<PatientDashboard> {
   }
 
   String _getStethoscopeStatus() {
+    print(
+      '🔍 Stethoscope raw data: ${widget.patient.isDoHaveDigitalStethoscope}',
+    );
     return widget.patient.isDoHaveDigitalStethoscope ?? 'Not specified';
   }
 
   String _getInhalerInfo() {
     try {
       if (widget.patient.inhalerType != null) {
-        // Remove extra quotes if present
+        print('🔍 Inhaler raw data: ${widget.patient.inhalerType}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.inhalerType!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Inhaler parsed: $data');
         final inhalers = data['inhalers'] as List?;
         if (inhalers != null && inhalers.isNotEmpty) {
           final inhaler = inhalers.first;
@@ -518,12 +668,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getRescuePackStatus() {
     try {
       if (widget.patient.rescuepackAtHome != null) {
-        // Remove extra quotes if present
+        print('🔍 Rescue Pack raw data: ${widget.patient.rescuepackAtHome}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.rescuepackAtHome!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Rescue Pack parsed: $data');
         return data['hasRescuePack'] == true ? 'Available' : 'Not available';
       }
     } catch (e) {
@@ -535,12 +690,19 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getEmergencyContact() {
     try {
       if (widget.patient.emergencyContactName != null) {
-        // Remove extra quotes if present
+        print(
+          '🔍 Emergency Contact raw data: ${widget.patient.emergencyContactName}',
+        );
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.emergencyContactName!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Emergency Contact parsed: $data');
         final name = data['emergencyContactName'];
         final phone = data['emergencyContactPhone'];
         return '$name ($phone)';
@@ -554,12 +716,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getVaccinationStatus() {
     try {
       if (widget.patient.fluVaccinated != null) {
-        // Remove extra quotes if present
+        print('🔍 Vaccination raw data: ${widget.patient.fluVaccinated}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.fluVaccinated!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Vaccination parsed: $data');
         final vaccinations = data['vaccinations'] as List?;
         if (vaccinations != null && vaccinations.isNotEmpty) {
           return vaccinations.join(', ');
@@ -574,12 +741,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getSmokingStatus() {
     try {
       if (widget.patient.smokingStatus != null) {
-        // Remove extra quotes if present
+        print('🔍 Smoking Status raw data: ${widget.patient.smokingStatus}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.smokingStatus!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Smoking Status parsed: $data');
         final status = data['smokingStatus'];
         final cigarettes = data['cigarettesPerDay'];
         final years = data['smokingYears'];
@@ -594,12 +766,17 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String _getOtherConditions() {
     try {
       if (widget.patient.otherCondition != null) {
-        // Remove extra quotes if present
+        print('🔍 Other Conditions raw data: ${widget.patient.otherCondition}');
+        // Handle the double-quoted JSON string
         String jsonString = widget.patient.otherCondition!;
+        // Remove outer quotes if present
         if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
           jsonString = jsonString.substring(1, jsonString.length - 1);
         }
+        // Unescape the JSON
+        jsonString = jsonString.replaceAll('\\"', '"');
         final data = json.decode(jsonString);
+        print('🔍 Other Conditions parsed: $data');
         final conditions = data['otherConditions'] as List?;
         final text = data['otherConditionText'];
         if (conditions != null && conditions.isNotEmpty) {
