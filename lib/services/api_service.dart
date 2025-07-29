@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/search_response.dart';
 import 'token_service.dart';
 
 class ApiService {
@@ -978,6 +977,7 @@ class ApiService {
   // Get weekly data for a patient
   Future<Map<String, dynamic>> getWeeklyData(
     String idToken,
+    String nurseIdtoken,
     String patientId,
   ) async {
     try {
@@ -1064,6 +1064,104 @@ class ApiService {
       return {
         'success': false,
         'error': 'Monthly data failed: ${e.toString()}',
+      };
+    }
+  }
+
+
+
+   // Login API call
+  Future<Map<String, dynamic>> getUserDetails(
+    String? idToken,
+    String? userId,
+    String? adminId
+  ) async {
+    try {
+      print('Calling backend API from mobile...');
+
+      final String apiUrl = '$baseUrl/api/admin/get-user-details';
+
+      final Map<String, dynamic> data = {
+        'user_id': userId,
+        'admin_id': adminId,
+        
+      };
+
+      print('API URL: $apiUrl');
+      print('Data: $data');
+
+      final response = await _dio.get(
+        apiUrl,
+        queryParameters: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $idToken',
+          },
+          validateStatus: (status) {
+            return status != null && status < 500;
+          },
+        ),
+      );
+
+      print('Backend API response status: ${response.statusCode}');
+      print('Backend API response body: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Store access token if provided
+        if (response.data['access_token'] != null) {
+          TokenService.setAccessToken(response.data['access_token']);
+          print('✅ Access token stored from login response');
+        }
+           print('✅ Access token stored from login response${response.data}');
+        return {
+          'success': true,
+          'data': response.data,
+          'message': 'Login successful',
+        };
+      } else if (response.statusCode == 409) {
+        // User already exists - this is actually a success case
+        // Store access token if provided
+        if (response.data['access_token'] != null) {
+          TokenService.setAccessToken(response.data['access_token']);
+        }
+
+        return {
+          'success': true,
+          'data': response.data,
+          'message': 'User already exists - login successful',
+        };
+      } else {
+        return {
+          'success': false,
+          'error': 'Backend authentication failed: ${response.statusCode}',
+          'data': response.data,
+        };
+      }
+    } on DioException catch (e) {
+      print('Dio error: ${e.message}');
+      print('Dio error response: ${e.response?.data}');
+      print('Dio error type: ${e.type}');
+
+      String errorMessage = 'Backend connection failed: ${e.message}';
+
+      if (e.type == DioExceptionType.connectionError) {
+        errorMessage =
+            'Connection error. Please check your internet connection.';
+      } else if (e.response?.statusCode == 403) {
+        errorMessage = 'Access forbidden. Please try again.';
+      } else if (e.type == DioExceptionType.connectionTimeout) {
+        errorMessage =
+            'Connection timeout. Please check your internet connection.';
+      }
+
+      return {'success': false, 'error': errorMessage};
+    } catch (e) {
+      print('Backend API call failed: $e');
+      return {
+        'success': false,
+        'error': 'Failed to connect to backend: ${e.toString()}',
       };
     }
   }

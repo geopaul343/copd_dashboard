@@ -5,8 +5,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'patient_search_screen.dart';
 import 'services/api_service.dart';
 
+
+
+
+
+
 class AuthScreenMobile extends StatefulWidget {
-  const AuthScreenMobile({Key? key}) : super(key: key);
+  const AuthScreenMobile({super.key});
 
   @override
   State<AuthScreenMobile> createState() => _AuthScreenMobileState();

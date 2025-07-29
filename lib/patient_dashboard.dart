@@ -1,3 +1,4 @@
+import 'package:copd_clinical_dashbord/bloc/dash_board_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'models/search_response.dart';
@@ -9,8 +10,9 @@ import 'dart:convert';
 
 class PatientDashboard extends StatefulWidget {
   final PatientUser patient;
+ 
 
-  const PatientDashboard({Key? key, required this.patient}) : super(key: key);
+   const PatientDashboard({super.key, required this.patient});
 
   @override
   State<PatientDashboard> createState() => _PatientDashboardState();
@@ -653,7 +655,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
         print('🔍 Pulse Oximeter parsed: $data');
         final hasOximeter = data['ownsPulseOximeter'] == true;
         final lastLevel = data['lastOxygenLevel'];
-        return hasOximeter ? 'Yes (Last reading: ${lastLevel}%)' : 'No';
+        return hasOximeter ? 'Yes (Last reading: $lastLevel%)' : 'No';
       }
     } catch (e) {
       print('Error parsing pulse oximeter: $e');
@@ -812,7 +814,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
         final status = data['smokingStatus'];
         final cigarettes = data['cigarettesPerDay'];
         final years = data['smokingYears'];
-        return '$status (${cigarettes} cigs/day, ${years} years)';
+        return '$status ($cigarettes cigs/day, $years years)';
       }
     } catch (e) {
       print('Error parsing smoking status: $e');

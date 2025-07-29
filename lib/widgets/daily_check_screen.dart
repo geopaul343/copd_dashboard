@@ -8,10 +8,10 @@ class DailyCheckScreen extends StatefulWidget {
   final String patientName;
 
   const DailyCheckScreen({
-    Key? key,
+    super.key,
     required this.patientId,
     required this.patientName,
-  }) : super(key: key);
+  });
 
   @override
   State<DailyCheckScreen> createState() => _DailyCheckScreenState();

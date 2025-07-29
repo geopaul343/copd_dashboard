@@ -8,10 +8,10 @@ class MonthlyCheckScreen extends StatefulWidget {
   final String patientName;
 
   const MonthlyCheckScreen({
-    Key? key,
+    super.key,
     required this.patientId,
     required this.patientName,
-  }) : super(key: key);
+  });
 
   @override
   State<MonthlyCheckScreen> createState() => _MonthlyCheckScreenState();

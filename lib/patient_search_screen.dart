@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:copd_clinical_dashbord/bloc/dash_board_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dio/dio.dart';
@@ -10,7 +11,7 @@ import 'auth_screen_mobile.dart';
 import 'models/search_response.dart';
 
 class PatientSearchScreen extends StatefulWidget {
-  const PatientSearchScreen({Key? key}) : super(key: key);
+  const PatientSearchScreen({super.key});
 
   @override
   State<PatientSearchScreen> createState() => _PatientSearchScreenState();
@@ -20,8 +21,9 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ApiService _apiService = ApiService();
+  final DashBoardBloc _bloc = DashBoardBloc();
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   String _searchQuery = '';
   bool _isSearching = false;
 

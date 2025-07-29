@@ -8,10 +8,10 @@ class WeeklyCheckScreen extends StatefulWidget {
   final String patientName;
 
   const WeeklyCheckScreen({
-    Key? key,
+    super.key,
     required this.patientId,
     required this.patientName,
-  }) : super(key: key);
+  });
 
   @override
   State<WeeklyCheckScreen> createState() => _WeeklyCheckScreenState();
@@ -47,7 +47,7 @@ class _WeeklyCheckScreenState extends State<WeeklyCheckScreen> {
       }
 
       final idToken = await user.getIdToken();
-      final result = await _apiService.getWeeklyData(idToken!, widget.patientId);
+      final result = await _apiService.getUserDetails(idToken!, widget.patientId,user.uid);
 
       if (result['success']) {
         setState(() {
