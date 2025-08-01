@@ -1,7 +1,10 @@
+import 'package:copd_clinical_dashbord/%20features/auth/auth_screen_mobile.dart';
+import 'package:copd_clinical_dashbord/core/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/api_service.dart';
-import '../auth_screen_mobile.dart';
+
+
+
 
 class DailyCheckScreen extends StatefulWidget {
   final String patientId;
@@ -72,7 +75,7 @@ class _DailyCheckScreenState extends State<DailyCheckScreen> {
     await _auth.signOut();
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => AuthScreenMobile()),
+        MaterialPageRoute(builder: (context) => const AuthScreenMobile()),
         (route) => false,
       );
     }

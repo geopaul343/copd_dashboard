@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'patient_search_screen.dart';
-import 'services/api_service.dart';
-
-
-
-
-
+import '../patient_search/patient_search_screen.dart';
+import '../../core/services/api_service.dart';
 
 class AuthScreenMobile extends StatefulWidget {
   const AuthScreenMobile({super.key});
@@ -23,6 +18,7 @@ class _AuthScreenMobileState extends State<AuthScreenMobile>
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   bool _isLoading = false;
+
   String? _error;
   late AnimationController _fadeAnimationController;
   late Animation<double> _fadeAnimation;

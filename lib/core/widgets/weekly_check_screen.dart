@@ -1,36 +1,38 @@
+import 'package:copd_clinical_dashbord/%20features/auth/auth_screen_mobile.dart';
+import 'package:copd_clinical_dashbord/core/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/api_service.dart';
-import '../auth_screen_mobile.dart';
 
-class MonthlyCheckScreen extends StatefulWidget {
+
+
+class WeeklyCheckScreen extends StatefulWidget {
   final String patientId;
   final String patientName;
 
-  const MonthlyCheckScreen({
+  const WeeklyCheckScreen({
     super.key,
     required this.patientId,
     required this.patientName,
   });
 
   @override
-  State<MonthlyCheckScreen> createState() => _MonthlyCheckScreenState();
+  State<WeeklyCheckScreen> createState() => _WeeklyCheckScreenState();
 }
 
-class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
+class _WeeklyCheckScreenState extends State<WeeklyCheckScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ApiService _apiService = ApiService();
   bool _isLoading = true;
-  Map<String, dynamic>? _monthlyData;
+  Map<String, dynamic>? _weeklyData;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadMonthlyData();
+    _loadWeeklyData();
   }
 
-  Future<void> _loadMonthlyData() async {
+  Future<void> _loadWeeklyData() async {
     try {
       setState(() {
         _isLoading = true;
@@ -47,25 +49,22 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
       }
 
       final idToken = await user.getIdToken();
-      final result = await _apiService.getMonthlyData(
-        idToken!,
-        widget.patientId,
-      );
+      final result = await _apiService.getUserDetails(idToken!, widget.patientId,user.uid);
 
       if (result['success']) {
         setState(() {
-          _monthlyData = result['data'];
+          _weeklyData = result['data'];
           _isLoading = false;
         });
       } else {
         setState(() {
-          _errorMessage = result['error'] ?? 'Failed to load monthly data';
+          _errorMessage = result['error'] ?? 'Failed to load weekly data';
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error loading monthly data: $e';
+        _errorMessage = 'Error loading weekly data: $e';
         _isLoading = false;
       });
     }
@@ -87,14 +86,14 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: Text(
-          'Monthly Check',
+          'Weekly Check',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
             fontSize: 20,
           ),
         ),
-        backgroundColor: Colors.purple.shade700,
+        backgroundColor: Colors.orange.shade700,
         elevation: 0,
         actions: [
           IconButton(
@@ -109,10 +108,10 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(color: Colors.purple.shade700),
+                    CircularProgressIndicator(color: Colors.orange.shade700),
                     SizedBox(height: 16),
                     Text(
-                      'Loading monthly data...',
+                      'Loading weekly data...',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey.shade600,
@@ -142,20 +141,20 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: _loadMonthlyData,
+                      onPressed: _loadWeeklyData,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple.shade700,
+                        backgroundColor: Colors.orange.shade700,
                       ),
                       child: Text('Retry'),
                     ),
                   ],
                 ),
               )
-              : _buildMonthlyContent(),
+              : _buildWeeklyContent(),
     );
   }
 
-  Widget _buildMonthlyContent() {
+  Widget _buildWeeklyContent() {
     return SingleChildScrollView(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -167,14 +166,14 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.purple.shade700, Colors.purple.shade500],
+                colors: [Colors.orange.shade700, Colors.orange.shade500],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.purple.withOpacity(0.3),
+                  color: Colors.orange.withOpacity(0.3),
                   blurRadius: 10,
                   offset: Offset(0, 4),
                 ),
@@ -182,10 +181,10 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
             ),
             child: Column(
               children: [
-                Icon(Icons.calendar_month, size: 48, color: Colors.white),
+                Icon(Icons.view_week, size: 48, color: Colors.white),
                 SizedBox(height: 12),
                 Text(
-                  'Monthly Health Report',
+                  'Weekly Health Summary',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -199,7 +198,7 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'This Month\'s Summary',
+                  'This Week\'s Progress',
                   style: TextStyle(fontSize: 14, color: Colors.white60),
                 ),
               ],
@@ -207,43 +206,43 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
           ),
           SizedBox(height: 24),
 
-          // Monthly Statistics
-          _buildSection('Monthly Statistics', Icons.analytics, [
-            _buildStatCard(
+          // Weekly Overview
+          _buildSection('Weekly Overview', Icons.analytics, [
+            _buildOverviewCard(
               'Average Oxygen Level',
-              '93%',
-              '+3% from last month',
+              '94%',
+              '+2%',
               Icons.trending_up,
               Colors.green,
             ),
-            _buildStatCard(
-              'Hospital Visits',
-              '1',
-              '-2 from last month',
-              Icons.local_hospital,
-              Colors.red,
-            ),
-            _buildStatCard(
-              'Medication Adherence',
-              '96%',
-              '+2% from last month',
-              Icons.medication,
+            _buildOverviewCard(
+              'Exercise Sessions',
+              '5/7',
+              '71%',
+              Icons.fitness_center,
               Colors.blue,
             ),
-            _buildStatCard(
-              'Exercise Sessions',
-              '22/30',
-              '73% completion rate',
-              Icons.fitness_center,
+            _buildOverviewCard(
+              'Medication Adherence',
+              '95%',
+              '+5%',
+              Icons.medication,
+              Colors.purple,
+            ),
+            _buildOverviewCard(
+              'Symptom-Free Days',
+              '4/7',
+              '57%',
+              Icons.sentiment_satisfied,
               Colors.orange,
             ),
           ]),
           SizedBox(height: 24),
 
-          // Monthly Progress Chart
-          _buildSection('Monthly Progress', Icons.show_chart, [
+          // Weekly Chart
+          _buildSection('Oxygen Levels Trend', Icons.show_chart, [
             Container(
-              height: 250,
+              height: 200,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -260,7 +259,7 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Weekly Oxygen Level Trends',
+                    'Daily Oxygen Levels',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -273,10 +272,13 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        _buildWeekBar('Week 1', 91, Colors.purple.shade300),
-                        _buildWeekBar('Week 2', 93, Colors.purple.shade400),
-                        _buildWeekBar('Week 3', 95, Colors.purple.shade500),
-                        _buildWeekBar('Week 4', 94, Colors.purple.shade600),
+                        _buildBar('Mon', 92, Colors.orange.shade300),
+                        _buildBar('Tue', 94, Colors.orange.shade400),
+                        _buildBar('Wed', 96, Colors.orange.shade500),
+                        _buildBar('Thu', 93, Colors.orange.shade400),
+                        _buildBar('Fri', 95, Colors.orange.shade500),
+                        _buildBar('Sat', 97, Colors.orange.shade600),
+                        _buildBar('Sun', 94, Colors.orange.shade400),
                       ],
                     ),
                   ),
@@ -286,54 +288,62 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
           ]),
           SizedBox(height: 24),
 
-          // Monthly Achievements
-          _buildSection('Monthly Achievements', Icons.emoji_events, [
-            _buildAchievementItem(
-              'Perfect Medication Week',
-              'Completed all medications for 7 consecutive days',
-              Icons.medication,
-              Colors.green,
+          // Weekly Activities
+          _buildSection('Weekly Activities', Icons.calendar_view_week, [
+            _buildWeeklyActivity(
+              'Monday',
+              'Morning walk, Medication taken',
+              true,
             ),
-            _buildAchievementItem(
-              'Exercise Champion',
-              'Completed 5 exercise sessions in one week',
-              Icons.fitness_center,
-              Colors.blue,
+            _buildWeeklyActivity(
+              'Tuesday',
+              'Oxygen therapy, Exercise session',
+              true,
             ),
-            _buildAchievementItem(
-              'Oxygen Master',
-              'Maintained oxygen levels above 90% for 10 days',
-              Icons.favorite,
-              Colors.red,
+            _buildWeeklyActivity(
+              'Wednesday',
+              'Doctor appointment, Medication taken',
+              true,
             ),
-            _buildAchievementItem(
-              'Symptom Free',
-              'No major symptoms reported for 5 days',
-              Icons.sentiment_satisfied,
-              Colors.orange,
+            _buildWeeklyActivity(
+              'Thursday',
+              'Rest day, Light stretching',
+              false,
             ),
-          ]),
-          SizedBox(height: 24),
-
-          // Monthly Goals Progress
-          _buildSection('Monthly Goals Progress', Icons.flag, [
-            _buildGoalProgress('Reduce hospital visits', 100, '1/1 target'),
-            _buildGoalProgress('Improve oxygen levels', 85, '93% target'),
-            _buildGoalProgress(
-              'Increase exercise frequency',
-              73,
-              '22/30 sessions',
+            _buildWeeklyActivity(
+              'Friday',
+              'Oxygen therapy, Evening walk',
+              true,
             ),
-            _buildGoalProgress(
-              'Maintain medication schedule',
-              96,
-              '96% adherence',
+            _buildWeeklyActivity(
+              'Saturday',
+              'Family visit, Medication taken',
+              true,
+            ),
+            _buildWeeklyActivity(
+              'Sunday',
+              'Rest day, Planning for next week',
+              false,
             ),
           ]),
           SizedBox(height: 24),
 
-          // Monthly Summary
-          _buildSection('Monthly Summary', Icons.note, [
+          // Weekly Goals
+          _buildSection('Weekly Goals', Icons.flag, [
+            _buildGoalItem('Complete 5 exercise sessions', true, '5/5'),
+            _buildGoalItem(
+              'Maintain oxygen levels above 90%',
+              true,
+              '7/7 days',
+            ),
+            _buildGoalItem('Take all medications on time', true, '95%'),
+            _buildGoalItem('Walk for 30 minutes daily', false, '4/7 days'),
+            _buildGoalItem('Attend support group meeting', true, '1/1'),
+          ]),
+          SizedBox(height: 24),
+
+          // Weekly Notes
+          _buildSection('Weekly Summary', Icons.note, [
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -345,7 +355,7 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Monthly Assessment:',
+                    'Weekly Assessment:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.grey.shade800,
@@ -353,26 +363,11 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Excellent progress this month! Patient has shown significant improvement in oxygen levels and overall health. Hospital visits reduced by 50%. Exercise adherence improved. Medication compliance remains excellent. Patient reports feeling more energetic and experiencing fewer symptoms. Continue with current treatment plan and consider increasing exercise frequency.',
+                    'Good progress this week. Oxygen levels improved significantly. Exercise adherence was excellent. Medication compliance remains high. Patient reported feeling more energetic and less shortness of breath. Continue with current treatment plan.',
                     style: TextStyle(color: Colors.grey.shade600, height: 1.4),
                   ),
                 ],
               ),
-            ),
-          ]),
-          SizedBox(height: 24),
-
-          // Next Month Goals
-          _buildSection('Next Month Goals', Icons.forward, [
-            _buildNextGoal('Reduce hospital visits to 0', 'High Priority'),
-            _buildNextGoal(
-              'Increase exercise to 25 sessions',
-              'Medium Priority',
-            ),
-            _buildNextGoal('Maintain oxygen levels above 94%', 'High Priority'),
-            _buildNextGoal(
-              'Attend all scheduled appointments',
-              'Medium Priority',
             ),
           ]),
           SizedBox(height: 20),
@@ -387,7 +382,7 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
       children: [
         Row(
           children: [
-            Icon(icon, color: Colors.purple.shade700, size: 24),
+            Icon(icon, color: Colors.orange.shade700, size: 24),
             SizedBox(width: 8),
             Text(
               title,
@@ -405,7 +400,7 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
     );
   }
 
-  Widget _buildStatCard(
+  Widget _buildOverviewCard(
     String title,
     String value,
     String change,
@@ -447,18 +442,33 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
                   style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  change,
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                Row(
+                  children: [
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        change,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -468,21 +478,21 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
     );
   }
 
-  Widget _buildWeekBar(String week, int value, Color color) {
-    final height = (value / 100) * 150; // Scale to max 150 height
+  Widget _buildBar(String day, int value, Color color) {
+    final height = (value / 100) * 120; // Scale to max 120 height
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 40,
+          width: 30,
           height: height,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
         SizedBox(height: 8),
-        Text(week, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+        Text(day, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
         Text(
           '$value%',
           style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
@@ -491,108 +501,7 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
     );
   }
 
-  Widget _buildAchievementItem(
-    String title,
-    String description,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  description,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                ),
-              ],
-            ),
-          ),
-          Icon(Icons.emoji_events, color: Colors.amber, size: 24),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGoalProgress(String goal, int progress, String status) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                goal,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              Text(
-                status,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: progress / 100,
-            backgroundColor: Colors.grey.shade200,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.purple.shade700),
-          ),
-          SizedBox(height: 4),
-          Text(
-            '$progress% Complete',
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNextGoal(String goal, String priority) {
-    Color priorityColor =
-        priority == 'High Priority' ? Colors.red : Colors.orange;
-
+  Widget _buildWeeklyActivity(String day, String activity, bool completed) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16),
@@ -600,11 +509,70 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: priorityColor.withOpacity(0.3)),
+        border: Border.all(
+          color: completed ? Colors.green.shade200 : Colors.grey.shade200,
+        ),
       ),
       child: Row(
         children: [
-          Icon(Icons.flag, color: priorityColor, size: 24),
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: completed ? Colors.green : Colors.grey.shade400,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  day,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  activity,
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            completed ? Icons.check_circle : Icons.radio_button_unchecked,
+            color: completed ? Colors.green : Colors.grey.shade400,
+            size: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGoalItem(String goal, bool achieved, String progress) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: achieved ? Colors.green.shade200 : Colors.orange.shade200,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            achieved ? Icons.check_circle : Icons.pending,
+            color: achieved ? Colors.green : Colors.orange,
+            size: 24,
+          ),
           SizedBox(width: 16),
           Expanded(
             child: Text(
@@ -615,15 +583,18 @@ class _MonthlyCheckScreenState extends State<MonthlyCheckScreen> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: priorityColor.withOpacity(0.1),
+              color:
+                  achieved
+                      ? Colors.green.withOpacity(0.1)
+                      : Colors.orange.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              priority,
+              progress,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: priorityColor,
+                color: achieved ? Colors.green : Colors.orange,
               ),
             ),
           ),

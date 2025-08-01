@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:copd_clinical_dashbord/bloc/dash_board_bloc.dart';
+
+
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dio/dio.dart';
-import 'patient_dashboard.dart';
-import 'services/api_service.dart';
-import 'services/token_service.dart';
-import 'auth_screen_mobile.dart';
+import '../patient_dashboard/patient_dashboard.dart';
+import '../../core/services/api_service.dart';
+import '../../core/services/token_service.dart';
+import '../auth/auth_screen_mobile.dart';
 import 'models/search_response.dart';
 
 class PatientSearchScreen extends StatefulWidget {
@@ -21,7 +23,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ApiService _apiService = ApiService();
-  final DashBoardBloc _bloc = DashBoardBloc();
 
   final bool _isLoading = false;
   String _searchQuery = '';

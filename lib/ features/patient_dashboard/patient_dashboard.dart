@@ -1,12 +1,13 @@
-import 'package:copd_clinical_dashbord/bloc/dash_board_bloc.dart';
+import 'dart:convert';
+
+import 'package:copd_clinical_dashbord/core/widgets/daily_check_screen.dart';
+import 'package:copd_clinical_dashbord/core/widgets/monthly_check_screen.dart';
+import 'package:copd_clinical_dashbord/core/widgets/weekly_check_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'models/search_response.dart';
-import 'auth_screen_mobile.dart';
-import 'widgets/daily_check_screen.dart';
-import 'widgets/weekly_check_screen.dart';
-import 'widgets/monthly_check_screen.dart';
-import 'dart:convert';
+import '../patient_search/models/search_response.dart';
+import '../auth/auth_screen_mobile.dart';
 
 class PatientDashboard extends StatefulWidget {
   final PatientUser patient;
